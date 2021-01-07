@@ -1,0 +1,14 @@
+{{/* 
+    Made by: Piter#6969
+    Credits: DZ#6669
+    
+    Trigger type: Command
+    Trigger: reverse
+    Usage: -reverse <text to reverse>
+*/}}
+
+{{$text := ""}}
+{{- range $i, $_ := ($split := split .StrippedMsg "") -}}
+    {{$text = print $text (sub (len $split) 1 $i|index $split)}}
+{{- end -}}
+{{$text}}

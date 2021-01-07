@@ -4,8 +4,8 @@ This repository is made by **Piter#6969** (Discord). My goal is to make someone 
 ## Available Custom Commands:
 <details>
 <summary>List of Custom Commands</summary>
-  - [Snippets](https://github.com/Piterxyz/yagpdb-customcommands/tree/main/snippets)
-    - Text reversing 
+- [Snippets](https://github.com/Piterxyz/yagpdb-customcommands/tree/main/snippets)
+  - Reverse text!
 </details>
 * more comming soon *
 

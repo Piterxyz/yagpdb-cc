@@ -11,6 +11,7 @@ This repository is made by **Piter#6969** (Discord). My goal is to make someone 
 *more comming soon*
 
 ## Planned Custom Commands:
+- [ ] User/server/role/channel info <br>
 - [ ] Suggestion system <br>
 - [ ] Snipe
 

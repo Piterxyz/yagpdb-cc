@@ -1,0 +1,26 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger type: Regex
+	Trigger     : \A(-|<@(!?)204255221017214977)\s*channel(-?info)?(?:\s+|\z)
+*/}}
+
+{{$col := 16777215}}{{$p := 0}}{{$r := .Member.Roles}}{{range .Guild.Roles}}{{if and (in $r .ID) (.Color) (lt $p .Position)}}{{$p = .Position}}{{$col = .Color}}{{end}}{{end}}
+{{$args := parseArgs 0 "`**=channel-info [channel]**`" (carg "channel" "channel")}}
+{{$channel := or ($args.Get 0) .Channel}}
+{{$createdAt := div $channel.ID 4194304 | add 1420070400000 | mult 1000000 | toDuration | (newDate 1970 1 1 0 0 0).Add}}
+{{$types := cslice "https://cdn.discordapp.com/emojis/714490546231705638.png?v=1" "DM" "https://cdn.discordapp.com/emojis/711600648659140678.png?v=1" "Group DM" "https://cdn.discordapp.com/emojis/714491414100181092.png?v=1" "https://cdn.discordapp.com/emojis/769606965240004659.png?v=1" "https://cdn.discordapp.com/emojis/790999347835174912.png?v=1"}}
+
+{{sendMessage nil (cembed
+	"author" (sdict "name" $channel.Name "icon_url" (index $types $channel.Type))
+	"color" $col
+	"fields" (cslice
+		(sdict "name" "• Channel ID:" "value" (str $channel.ID) "inline" true)
+		(sdict "name" "• Channel Topic:" "value" (or $channel.Topic "None.") "inline" true)
+		(sdict "name" "• Parent Channel (category):" "value" (or (and $channel.ParentID (printf "• ID: %d\n• Mention: <#%[1]d>" $channel.ParentID)) "The channel you are currently checking is a category") "inline" true)
+		(sdict "name" "• NSFW:" "value" (or (and $channel.NSFW "Yes") "No") "inline" true)
+		(sdict "name" "• Position:" "value" (str $channel.Position) "inline" true)
+		(sdict "name" "• Bitrate:" "value" (or (and $channel.Bitrate (print (div $channel.Bitrate 1000) "kbps")) "The channel you are currently checking is not of type voice!") "inline" true)
+	)
+	"footer" (sdict "text" "• Channel created at")
+	"timestamp" $createdAt
+)}}

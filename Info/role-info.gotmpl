@@ -1,0 +1,46 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger type: Regex
+	Trigger     : \A(-|<@(!?)204255221017214977)\s*role(-?info)?(?:\s+|\z)
+*/}}
+
+{{$role := 0}}{{$displayperms := cslice}}{{$ex := "png" }}{{if reFind "a_" .Guild.Icon}}{{$ex = "gif" }}{{end}}
+{{$icon := print "https://cdn.discordapp.com/icons/" .Guild.ID "/" .Guild.Icon "." $ex "?size=1024"}}	
+{{$perms := cslice "Create Instant Invite" "Kick Members" "Ban Members" "Administrator" "Manage Channels" "Manage Server" "Add Reactions" "View Audit Logs" "Priority Speaker" "Stream" "View Channel" "Send Messages" "Send TTS Messages" "Manage Messages" "Embed Links" "Attach Files" "Read Message History" "Mention Everyone" "Use External Emojis" "View Guild Insigths" "Voice Connect" "Voice Speak" "Voice Mute Members" "Voice Deafen Members" "Voice Move Members" "Voice Use VAD" "Change Nickname" "Manage Nicknames" "Manage Roles" "Manage Webhooks" "Manage Emojis"}}
+{{if .CmdArgs}}
+	{{$rolecarg := or (reFind `\d{17,19}` .StrippedMsg) (lower .StrippedMsg)}}
+	{{- range .Guild.Roles -}}
+		{{if eq $rolecarg (lower .Name) (str .ID)}}
+			{{$role = .}}
+		{{end}}
+	{{- end -}}
+	{{if $role}}
+		{{$perm := $role.Permissions}}
+		{{range seq 0 (len $perms)}}
+			{{if (mod $perm 2)}}
+				{{$displayperms = $displayperms.Append (print "`" (index $perms .) "`")}}
+			{{end}}
+			{{$perm = (div $perm 2)}}
+		{{end}}
+		{{sendMessage nil (cembed
+			"title" $role.Name
+			"thumbnail" (sdict "url" $icon)
+			"color" $role.Color
+			"fields" (cslice
+				(sdict "name" "• ID:" "value" (str $role.ID) "inline" true)
+				(sdict "name" "• Colour:" "value" (or (and $role.Color (printf "• Hex: #%06x\n• Decimal: %[1]d" $role.Color)) "This role has no colour!") "inline" true)
+				(sdict "name" "• Position:" "value" (str $role.Position) "inline" true)
+				(sdict "name" "• Mentionable:" "value" (or (and $role.Mentionable "Yes") "No") "inline" true)
+				(sdict "name" "• Hoisted:" "value" (or (and $role.Hoist "Yes") "No") "inline" true)
+				(sdict "name" "• Managed:" "value" (or (and $role.Managed "Yes") "No") "inline" true)
+				(sdict "name" "• Permissions:" "value" (joinStr ", " $displayperms.StringSlice))
+			)
+			"footer" (sdict "text" "• Role created at")
+			"timestamp" (div $role.ID 4194304 | add 1420070400000 | mult 1000000 | toDuration | (newDate 1970 1 1 0 0 0).Add)
+		)}}
+	{{else}}
+		Provided by you role not exists!
+	{{end}}
+{{else}}
+	Correct usage: `-role-info <role name/id/mention>`
+{{end}}

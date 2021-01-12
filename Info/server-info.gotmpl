@@ -1,0 +1,49 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger type: Regex
+	Trigger     : \A(-|<@(!?)204255221017214977)\s*server(-?info)?(?:\s+|\z)
+*/}}
+
+{{$features := cslice}}{{$col := 16777215}}{{$p := 0}}{{$r := .Member.Roles}}{{range .Guild.Roles}}{{if and (in $r .ID) (.Color) (lt $p .Position)}}{{$p = .Position}}{{$col = .Color}}{{end}}{{end}}
+{{$ex := "png" }}{{if reFind "a_" .Guild.Icon}}{{$ex = "gif" }}{{end}}{{$icon := print "https://cdn.discordapp.com/icons/" .Guild.ID "/" .Guild.Icon "." $ex "?size=1024"}}
+{{range .Guild.Features}}
+	{{$features = $features.Append (print (reReplace "_" (title (lower .)) " "))}}
+{{end}}
+{{$mfa := cslice "None" "Low" "Medium" "High" "Very High"}}
+{{$embed := cembed
+	"author" (sdict "name" .Guild.Name "icon_url" $icon)
+	"description" .Guild.Description
+	"thumbnail" (sdict "url" $icon)
+	"fields" (cslice
+		(sdict "name" "• ID:" "value" (str .Guild.ID) "inline" true)
+		(sdict "name" "• Owner:" "value" (printf "• Mention: <@%d>\n• ID: %[1]d" .Guild.OwnerID) "inline" true)
+		(sdict "name" "• Members:" "value" (printf "• Members: %d\n• Online: %d\n• Bots: %d" .Guild.MemberCount onlineCount onlineCountBots) "inline" true)
+		(sdict "name" "• System Channel:" "value" (printf "• ID: %s\n• Mention: <#%[1]s>" .Guild.SystemChannelID) "inline" true)
+		(sdict "name" "• MFA:" "value" (printf "• Level: %s" (index $mfa .Guild.VerificationLevel)) "inline" true)
+		(sdict "name" "• AFK Channel:" "value" (printf "• ID: %d\n• Mention <#%[1]d>\n• Timeout: %s" .Guild.AfkChannelID (humanizeDurationSeconds (toDuration (mult .Guild.AfkTimeout .TimeSecond)))) "inline" true)
+		(sdict "name" "• Features:" "value" (joinStr ", " $features.StringSlice) "inline" true)
+		(sdict "name" "• Roles:" "value" (printf "• Count: %d\n• Use the `-listroles` command to display all roles!" (len .Guild.Roles)) "inline" true)
+		(sdict "name" "• Emojis:" "value" (printf "• Count: %d\n• Use the `-serverinfo -listemojis` command to display all roles!" (len .Guild.Emojis)) "inline" true)
+	)
+	"color" $col
+	"footer" (sdict "text" "• Guild created at")
+	"timestamp" (div .Guild.ID 4194304 | add 1420070400000 | mult 1000000 | toDuration | (newDate 1970 1 1 0 0 0).Add)
+}}
+
+{{if (reFind `-listemoji` .StrippedMsg)}}
+	{{$list := cslice}}
+	{{range .Guild.Emojis}}
+		{{if .Animated}}
+			{{$list = $list.Append (print "<a:" .Name ":" .ID ">")}}
+		{{else}}
+			{{$list = $list.Append (print "<:" .Name ":" .ID ">")}}
+		{{end}}
+	{{end}}
+	{{sendMessage nil (cembed
+		"author" (sdict "name" (print "List of the emojis on the server " .Guild.Name) "icon_url" $icon)
+		"description" (joinStr " " $list.StringSlice)
+		"color" $col
+	)}}
+{{else}}
+	{{sendMessage nil $embed}}
+{{end}}

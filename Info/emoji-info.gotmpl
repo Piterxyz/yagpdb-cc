@@ -1,0 +1,34 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger type: Regex
+	Trigger     : \A(-|<@(!?)204255221017214977)\s*emoji(-?info)?(?:\s+|\z)
+*/}}
+
+{{$emoji := 0}}{{$col := 16777215}}{{$p := 0}}{{$r := .Member.Roles}}{{range .Guild.Roles}}{{if and (in $r .ID) (.Color) (lt $p .Position)}}{{$p = .Position}}{{$col = .Color}}{{end}}{{end}}
+{{$ex := "png" }}{{if reFind "a_" .Guild.Icon}}{{$ex = "gif" }}{{end}}{{$icon := print "https://cdn.discordapp.com/icons/" .Guild.ID "/" .Guild.Icon "." $ex "?size=1024"}}	
+{{if .StrippedMsg}}
+	{{$emojicarg := or (reFind `\d{17,19}` .StrippedMsg) (lower .StrippedMsg)}}
+	{{- range .Guild.Emojis -}}
+		{{if eq $emojicarg (lower .Name) (str .ID)}}
+			{{$emoji = .}}
+		{{end}}
+	{{- end -}}
+	{{if $emoji}}
+		{{$link := (print "https://cdn.discordapp.com/emojis/" $emoji.ID (or (and $emoji.Animated ".gif") ".png") "?v=1")}}
+		{{sendMessage nil (cembed
+			"author" (sdict "name" .User.String "icon_url" (.User.AvatarURL "256"))
+			"fields" (cslice
+				(sdict "name" "• Name:" "value" $emoji.Name "inline" true)
+				(sdict "name" "• ID:" "value" (str $emoji.ID) "inline" true)
+				(sdict "name" "• Animated:" "value" (or (and $emoji.Animated "Yes") "No") "inline" true)
+				(sdict "name" "• Download link:" "value" (printf "[Click here](%s)" $link) "inline" true)
+			)
+			"thumbnail" (sdict "url" $link)
+			"color" $col
+		)}}
+	{{else}}
+		You provided wrong emoji or is not from this server.
+	{{end}}
+{{else}}
+	Correct usage: `-emoji-info <emoji|name|id>`
+{{end}}

@@ -6,12 +6,15 @@ This repository is made by **Piter#6969** (Discord). My goal is to make someone 
 <summary>List of Custom Commands</summary>
 
 - [Snippets](https://github.com/Piterxyz/yagpdb-customcommands/tree/main/snippets)
-  - Reverse text.
+  - Reverse text!
+  - Leave your message without formatting!
+- [Info](https://github.com/Piterxyz/yagpdb-cc/tree/main/Info)
+  - Display informations about a role, emoji, channel, server or user!
 </details>
 *more comming soon*
 
 ## Planned Custom Commands:
-- [ ] User/server/role/channel info <br>
+- [x] User/server/role/channel/emoji info <br>
 - [ ] Suggestion system <br>
 - [ ] Snipe
 

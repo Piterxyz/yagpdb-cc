@@ -1,0 +1,18 @@
+{{/* 
+	Made by: Piter#6969
+	
+	Trigger type: Command
+	Trigger: formatescape
+	Usage: -formatescape <input>
+*/}}
+
+
+{{with .StrippedMsg}}
+	{{$escape := .}}
+	{{if (reFind `\\(\*|_|\x60|~|\\)` .)}}{{$escape = reReplace `\\(\*|_|\x60|~|\\)` . `$1`}}{{end}}
+	{{$escape = reReplace  `(\*|_|\x60|~|\\|\|)` $escape `\$0`}}
+	{{.}} -> {{$escape}}
+{{else}}
+	There is nothing to escape!
+	Usage: `-formatescape <input>`
+{{end}}

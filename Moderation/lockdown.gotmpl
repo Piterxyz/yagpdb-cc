@@ -1,0 +1,68 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger Type: Regex
+	Trigger     : .*
+*/}}
+
+
+{{/* CONFIG */}}
+{{$allowedroles := cslice}} {{/* ID OF THE ROLES ALLOWED TO USE THIS COMMAND */}}
+
+{{/* CODE */}}
+{{$access := false}}{{$duration := 0}}{{$reason := ""}}{{$prefix := index (reFindAllSubmatches `.*?: \x60(.*)\x60\z` (execAdmin "Prefix")) 0 1}}{{$skip := false}}
+{{range .Member.Roles}}
+	{{if in $allowedroles .}}
+		{{$access = true}}
+	{{end}}
+{{end}}
+
+{{if (dbGet .Channel.ID "lockdown")}}
+	{{if not (reFind (print $prefix "(?i)l(?:ock)?d(?:own)?") (index .Args 0))}}
+		{{deleteTrigger 0}}
+	{{else}}
+		{{if $access}}
+			{{dbDel .Channel.ID "lockdown"}}
+			Channel has been unlocked!
+		{{end}}
+	{{end}}
+{{else}}
+	{{if $args := .Args}}
+		{{if (reFind (print $prefix "(?i)l(?:ock)?d(?:own)?") (index $args 0))}}
+			{{if $access}}
+				{{if and (ge (len $args) 2)}}
+					{{$args = (slice .Args 1)}}
+					{{range $i, $v := $args}}
+						{{if and (gt (len $v) 1) (not $skip)}}
+							{{if and (eq $v "-d") (gt (len $args) (add $i 1))}}
+								{{$duration = (toDuration (index $args (add $i 1)))}}
+								{{$skip = true}}
+							{{else}}
+								{{$reason = print $reason " " $v}}
+								{{$skip = false}}
+							{{end}}
+						{{end}}
+					{{end}}
+					{{if $duration}}
+						{{dbSetExpire $.Channel.ID "lockdown" $reason (toInt $duration.Seconds)}}
+					{{else}}
+						{{dbSet $.Channel.ID "lockdown" $reason}}
+					{{end}}
+					{{$embed := sdict 
+						"author" (sdict "name" (print .Channel.Name " | Channel has been locked!"))
+						"fields" (cslice
+							(sdict "name" "• Channel:" "value" (printf "<#%d> (%[1]d)" .Channel.ID) "inline" true)
+							(sdict "name" "• Reason:" "value" (or $reason "Not provided!") "inline" true)
+							(sdict "name" "• Duration:" "value" (or (and $duration (humanizeDurationSeconds ((dbGet .Channel.ID "lockdown").ExpiresAt.Sub currentTime))) "Until further notice."))
+						)
+						"footer" (sdict "text" (print "By: " .User.String) "icon_url" (.User.AvatarURL "256"))
+					}}
+					{{sendMessage nil (cembed $embed)}}
+				{{else}}
+					{{print "Correct usage: `-lockdown <reason> [-d duration]`"}}
+				{{end}}
+			{{else}}
+				{{print "You're not allowed to use this command!"}}
+			{{end}}
+		{{end}}
+	{{end}}
+{{end}}

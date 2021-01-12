@@ -1,0 +1,33 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger type: Regex
+	Trigger     : \A(-|<@(!?)204255221017214977)\s*user(-?info)?(?:\s+|\z)
+*/}}
+
+{{$args := parseArgs 0 "`**-user-info [user]**`" (carg "userid" "user")}}
+{{$user := or (userArg ($args.Get 1)) .User}}
+{{$member := or (getMember $user.ID) .Member}}
+
+{{$roles := cslice}}{{$highest := 0}}{{$col := 16777215}}{{$p := 0}}{{$r := $member.Roles}}{{range .Guild.Roles}}{{if and (in $r .ID) .Color (lt $p .Position)}}{{$col = .Color}}{{$p = .Position}}{{end}}{{end}}
+{{$createdAt := div $user.ID 4194304 | add 1420070400000 | mult 1000000 | toDuration | (newDate 1970 1 1 0 0 0).Add}}
+{{range $member.Roles}}
+	{{$roles = $roles.Append (print "<@&" . ">")}}
+	{{- range $.Guild.Roles -}}
+		{{if and (in $member.Roles .ID) (lt $p .Position)}}
+			{{$highest = .ID}}{{$p = .Position}}
+		{{end}}
+	{{- end -}}
+{{end}}
+
+{{sendMessage nil (cembed
+	"author" (sdict "name" $user.String "icon_url" ($user.AvatarURL "256"))
+	"color" $col
+	"fields" (cslice
+		(sdict "name" "• ID:" "value" (str $user.ID) "inline" true)
+		(sdict "name" "• Bot:" "value" (or (and $user.Bot "Yes") "No") "inline" true)
+		(sdict "name" "• Joined Server:" "value" ($member.JoinedAt.Parse.Format "Jan 02, 2006 3:04 AM") "inline" false)
+		(sdict "name" "• Joined Discord:" "value" ($createdAt.Format "Monday, January 2, 2006 at 3:04 AM") "inline" true)
+		(sdict "name" "• Highest role:" "value" (print "<@&" $highest ">") "inline" true)
+		(sdict "name" "• Roles:" "value" (joinStr ", " $roles.StringSlice) "inline" false)
+	)
+)}}

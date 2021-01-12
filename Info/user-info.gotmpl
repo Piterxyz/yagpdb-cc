@@ -5,16 +5,16 @@
 */}}
 
 {{$args := parseArgs 0 "`**-user-info [user]**`" (carg "userid" "user")}}
-{{$user := or (userArg ($args.Get 1)) .User}}
+{{$user := or (userArg ($args.Get 0)) .User}}
 {{$member := or (getMember $user.ID) .Member}}
 
-{{$roles := cslice}}{{$highest := 0}}{{$col := 16777215}}{{$p := 0}}{{$r := $member.Roles}}{{range .Guild.Roles}}{{if and (in $r .ID) .Color (lt $p .Position)}}{{$col = .Color}}{{$p = .Position}}{{end}}{{end}}
+{{$roles := cslice}}{{$highest := 0}}{{$col := 16777215}}{{$p2 := 0}}{{$p := 0}}{{$r := $member.Roles}}{{range .Guild.Roles}}{{if and (in $r .ID) .Color (lt $p .Position)}}{{$col = .Color}}{{$p = .Position}}{{end}}{{end}}
 {{$createdAt := div $user.ID 4194304 | add 1420070400000 | mult 1000000 | toDuration | (newDate 1970 1 1 0 0 0).Add}}
 {{range $member.Roles}}
 	{{$roles = $roles.Append (print "<@&" . ">")}}
 	{{- range $.Guild.Roles -}}
-		{{if and (in $member.Roles .ID) (lt $p .Position)}}
-			{{$highest = .ID}}{{$p = .Position}}
+		{{if and (in $member.Roles .ID) (lt $p2 .Position)}}
+			{{$highest = .ID}}{{$p2 = .Position}}
 		{{end}}
 	{{- end -}}
 {{end}}

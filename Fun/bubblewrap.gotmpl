@@ -1,0 +1,23 @@
+{{/* 
+	Created by   : Piter#2105
+	Trigger type : Command
+	Trigger      : bubblewrap
+
+	Usage        : -bubblewrap
+*/}}
+
+{{$list := ""}}
+{{- range (seq 0 100) -}}
+	{{$list = print $list "||pop||"}}
+	{{if not (mod (add . 1) 10)}}
+		{{$list = print $list "\n"}}
+	{{end}} 
+{{- end -}}
+
+{{sendMessage nil (cembed
+	"title" "Bubble wrap!"
+	"color" 14054744
+	"fields" (cslice
+		(sdict "name" "Wrap bubbles like a pro!" "value" $list)
+	)
+)}}

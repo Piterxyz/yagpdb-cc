@@ -33,6 +33,7 @@
 				{{addRoleID $role}}
 				{{deleteTrigger 10}}
 				{{deleteMessage $channel .m 10}}
+				{{dbDel $user.ID "captcha"}}
 				{{cancelScheduledUniqueCC $.CCID (print "verify_check" $user.ID)}}
 			{{else}}
 				{{editMessage $channel .m (complexMessageEdit "content" $user.Mention "embed" (cembed

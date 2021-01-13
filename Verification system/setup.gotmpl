@@ -1,0 +1,14 @@
+{{/*
+	Made by: Piter#6969 (332258095264825352)
+	Trigger type: Command
+	Trigger: setup
+
+	Usage: -setup
+*/}}
+
+{{/* CONFIG */}}
+{{$reaction := "✅"}}
+{{$channel := channelID}} {{/* Channel where verification begins */}}
+
+{{$x := sendMessageRetID $channel "React below to become verified"}}
+{{addMessageReactions $channel $x $reaction}}

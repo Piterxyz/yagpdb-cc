@@ -33,8 +33,8 @@
 				{{addRoleID $role}}
 				{{deleteTrigger 10}}
 				{{deleteMessage $channel .m 10}}
+				{{cancelScheduledUniqueCC $.CCID (print "verify_check_" $user.ID)}}
 				{{dbDel $user.ID "captcha"}}
-				{{cancelScheduledUniqueCC $.CCID (print "verify_check" $user.ID)}}
 			{{else}}
 				{{editMessage $channel .m (complexMessageEdit "content" $user.Mention "embed" (cembed
 					"description" "Captcha has been entered incorrectly! New captcha will be generated in 3 seconds..."

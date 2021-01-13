@@ -1,0 +1,47 @@
+{{/*
+	Made by: Piter#6969 (332258095264825352)
+	Trigger type: Regex
+	Trigger: .*
+*/}}
+
+{{/* CONFIG */}}
+{{$channel := channelID}} {{/* Channel where verification begins */}}
+{{$role := roleID}} {{/* Role given after successfully passed verification */}}
+
+{{/* CODE */}}
+{{$cslice := shuffle (cslice "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z")}}
+{{$random := ""}}{{range (seq 0 10)}}{{$r := index (shuffle (cslice 0 1)) 0}}{{if eq $r 1}}{{$random = print $random (upper (index $cslice .))}}{{else}}{{$random = print $random (index $cslice .)}}{{end}}{{end}}
+{{$user := ""}}{{$msg := ""}}
+{{with .ExecData}}
+	{{$user = userArg .u}}
+	{{$msg = .m}}
+	{{editMessage $channel .m (complexMessageEdit "content" $user.Mention "embed" (cembed 
+		"description" (printf "Your captcha: `%s`. Type it below to become verified!" $random)
+		"color" 16444469
+	))}}
+	{{dbSetExpire $user.ID "captcha" (sdict "c" $random "m" $msg "u" $user.ID) 30}}
+	{{scheduleUniqueCC $.CCID $channel 30 (print "verify_check_" $user.ID) (sdict "m" $msg "u" $user.ID)}}
+{{else}}
+	{{if ($db := (dbGet .User.ID "captcha").Value)}}
+		{{with sdict $db}}
+			{{$user = userArg .u}}
+			{{if (reFind .c $.Message.Content)}}
+				{{editMessage $channel .m (complexMessageEdit "content" $user.Mention "embed" (cembed
+					"description" "Captcha has been entered correctly!"
+					"color" 5503541
+				))}}
+				{{addRoleID $role}}
+				{{deleteTrigger 10}}
+				{{deleteMessage $channel .m 10}}
+				{{cancelScheduledUniqueCC $.CCID (print "verify_check" $user.ID)}}
+			{{else}}
+				{{editMessage $channel .m (complexMessageEdit "content" $user.Mention "embed" (cembed
+					"description" "Captcha has been entered incorrectly! New captcha will be generated in 3 seconds..."
+					"color" 16397635
+				))}}
+				{{deleteTrigger 3}}
+				{{execCC $.CCID $channel 3 (sdict "m" .m "u" $user.ID)}}
+			{{end}}
+		{{end}}
+	{{end}}
+{{end}}

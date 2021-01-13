@@ -10,6 +10,10 @@ This repository is made by **Piter#6969** (Discord). My goal is to make someone 
   - Leave your message without formatting!
 - [Info](https://github.com/Piterxyz/yagpdb-cc/tree/main/Info)
   - Display informations about a role, emoji, channel, server or user!
+- [Captcha verification system](https://github.com/Piterxyz/yagpdb-cc/tree/main/Verification%20system)
+  - Advanced verification system with captcha!
+- [Moderation](https://github.com/Piterxyz/yagpdb-cc/tree/main/Moderation)
+  - Lockdown a channel!
 </details>
 *more comming soon*
 

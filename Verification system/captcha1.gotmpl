@@ -1,0 +1,23 @@
+{{/*
+	Made by: Piter#6969 (332258095264825352)
+	Trigger type: Reaction
+	Trigger: Reaction Added
+*/}}
+
+{{/* CONFIG */}}
+{{$CCID := CCID}} {{/* Custom Command ID of the second command */}}
+{{$channel := channelID}} {{/* Channel where verification begins */}}
+{{$reaction := "✅"}} 
+
+{{/* CODE */}}
+{{if .ReactionAdded}}
+	{{if eq .Channel.ID $channel}}
+		{{if eq .Reaction.Emoji.Name $reaction}}
+			{{$x := sendMessageRetID $channel (complexMessage "content" .User.Mention "embed" (cembed
+				"description" "Hello! Your captcha will be generated in 3 seconds..."
+				"color" 16444469
+			))}}
+			{{execCC $CCID $channel 3 (sdict "u" .User.ID "m" $x)}}
+		{{end}}
+	{{end}}
+{{end}}

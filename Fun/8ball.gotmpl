@@ -9,7 +9,7 @@
 {{$answers := cslice "Yes." "Maybe." "No."}} {{/* I added only 3, you can add more if you want. */}}
 
 {{if .CmdArgs}}
-	{{.User.Mention}}, `{{index (shuffle $answers) (randInt (len $answers))}}`
+	{{.User.Mention}}, `{{index (shuffle $answers) 0}}`
 {{else}}
 	Correct usage: -8ball <question>
 {{end}}

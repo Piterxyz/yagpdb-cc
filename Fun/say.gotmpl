@@ -1,0 +1,17 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger Type: Command
+	Trigger     : say
+
+	Usage  : -say <content>
+*/}}
+
+{{if .CmdArgs}}
+	{{sendMessage nil (cembed
+		"author" (sdict "name" .User.String "icon_url" (.User.AvatarURL "256"))
+		"description" .StrippedMsg
+		"color" (randInt 11111 99999)
+	)}}
+{{else}}
+	Correct usage: -say <question>
+{{end}}

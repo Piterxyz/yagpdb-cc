@@ -1,0 +1,15 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger Type: Command
+	Trigger     : 8ball
+
+	Usage  : -8ball <question>
+*/}}
+
+{{$answers := cslice "Yes." "Maybe." "No."}} {{/* I added only 3, you can add more if you want. */}}
+
+{{if .CmdArgs}}
+	{{.User.Mention}}, `{{index (shuffle $answers) (randInt (len $answers))}}`
+{{else}}
+	Correct usage: -8ball <question>
+{{end}}

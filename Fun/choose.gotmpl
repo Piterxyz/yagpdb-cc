@@ -1,0 +1,16 @@
+{{/*
+	Created by  : Piter#2105
+	Trigger Type: Command
+	Trigger     : choose 
+
+	Usage  : -choose <option 1> <option 2> [option 3]...
+	Example: -choose "no u" "maby u" "yes u"
+
+	<> - requred, [] - optional
+*/}}
+
+{{if ge (len .CmdArgs) 2}}
+	{{.User.Mention}}, I choose `{{index .CmdArgs (randInt (len .CmdArgs))}}`
+{{else}}
+	I choose for you to use this command correctly. Please list at least 2 items to choose from.
+{{end}}

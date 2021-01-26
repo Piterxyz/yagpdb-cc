@@ -17,12 +17,16 @@
 {{end}}
 
 {{if (dbGet .Channel.ID "lockdown")}}
-	{{if not (reFind (print $prefix "(?i)l(?:ock)?d(?:own)?") (index .Args 0))}}
-		{{deleteTrigger 0}}
-	{{else}}
+	{{if (reFind (print $prefix "(?i)l(?:ock)?d(?:own)?") (index .Args 0))}}
 		{{if $access}}
 			{{dbDel .Channel.ID "lockdown"}}
 			Channel has been unlocked!
+		{{else}}
+			{{deleteTrigger 0}}
+		{{end}}
+	{{else}}
+		{{if not $access}}
+			{{deleteTrigger 0}}
 		{{end}}
 	{{end}}
 {{else}}

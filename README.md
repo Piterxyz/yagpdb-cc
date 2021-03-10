@@ -15,7 +15,7 @@ This repository is made by **Piter#2105** (Discord). My goal is to make someone 
 - [Moderation](https://github.com/Piterxyz/yagpdb-cc/tree/main/Moderation)
   - Lockdown a channel!
 </details>
-*more comming soon*
+*more coming soon*
 
 ## Planned Custom Commands:
 - [x] User/server/role/channel/emoji info <br>

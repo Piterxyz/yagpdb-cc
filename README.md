@@ -1,5 +1,5 @@
 # YAGPDB Custom Commands
-This repository is made by **Piter#2105** (Discord). My goal is to make someone else's life easier by posting here code totally for free! Enjoy ;)
+This repository is made by **Piter#8444** (Discord). My goal is to make someone else's life easier by posting here code totally for free! Enjoy ;)
 
 ## Available Custom Commands:
 <details>
@@ -24,7 +24,7 @@ This repository is made by **Piter#2105** (Discord). My goal is to make someone 
 
 ## You have found a bug or want to contribute?
 If you want to share some stuff or have found a bug, feel free to create a new pull request/issue. <br>
-I am also open for suggestions, dm me on discord (Piter#6969) or open an issue.
+I am also open for suggestions, dm me on discord (Piter#8444) or open an issue.
 
 ## Other cool githubs about YAGPDB:
 - **NaruDevnote**: [yagpdb-ccs](https://github.com/NaruDevnote/yagpdb-ccs)

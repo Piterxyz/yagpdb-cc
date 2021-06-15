@@ -4,6 +4,7 @@ This repository is made by **Piter#8444** (Discord). My goal is to make someone 
 ## Available Custom Commands:
 <details>
 <summary>List of Custom Commands</summary>
+  
 - [Fun](https://github.com/Piterxyz/yagpdb-cc/tree/main/Fun)
   - Check what 8ball says!
   - Wrap bubbles like a pro!

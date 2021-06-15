@@ -4,16 +4,18 @@ This repository is made by **Piter#8444** (Discord). My goal is to make someone 
 ## Available Custom Commands:
 <details>
 <summary>List of Custom Commands</summary>
-
+- [Fun](https://github.com/Piterxyz/yagpdb-cc/tree/main/Fun)
+  - Check what 8ball says!
+  - Wrap bubbles like a pro!
+  - Not sure what to choose? Let YAG do it by you!
+  - Say something, but as YAG!
+- [Info](https://github.com/Piterxyz/yagpdb-cc/tree/main/Info)
+  - Display informations about a role, emoji, channel, server or user!
+- [Moderation](https://github.com/Piterxyz/yagpdb-cc/tree/main/Moderation)
+  - Lockdown a channel!
 - [Snippets](https://github.com/Piterxyz/yagpdb-customcommands/tree/main/snippets)
   - Reverse text!
   - Leave your message without formatting!
-- [Info](https://github.com/Piterxyz/yagpdb-cc/tree/main/Info)
-  - Display informations about a role, emoji, channel, server or user!
-- [Captcha verification system](https://github.com/Piterxyz/yagpdb-cc/tree/main/Verification%20system)
-  - Advanced verification system with captcha!
-- [Moderation](https://github.com/Piterxyz/yagpdb-cc/tree/main/Moderation)
-  - Lockdown a channel!
 </details>
 *more coming soon*
 

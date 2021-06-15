@@ -6,18 +6,23 @@
 	Usage        : -bubblewrap
 */}}
 
-{{$list := ""}}
-{{- range (seq 0 100) -}}
-	{{$list = print $list "||pop||"}}
-	{{if not (mod (add . 1) 10)}}
-		{{$list = print $list "\n"}}
+{{/* CONFIG */}}
+{{$bubblewrap_emote := "pop"}}
+
+{{/* CODE, DON'T TOUCH UNLESS YOU KNOW WHAT YOU'RE DOING! */}}
+{{$bubbles := ""}}
+{{- range (seq 0 64) -}}
+	{{$bubbles = printf "%s||%s||" $bubbles $bubblewrap_emote}}
+	{{if not (mod (add . 1) 8)}}
+		{{$bubbles = print $bubbles "\n"}}
 	{{end}} 
 {{- end -}}
-
-{{sendMessage nil (cembed
-	"title" "Bubble wrap!"
-	"color" 14054744
-	"fields" (cslice
-		(sdict "name" "Wrap bubbles like a pro!" "value" $list)
-	)
-)}}
+{{if le (len $bubbles) 2048}}
+	{{sendMessage nil (cembed
+		"title" "Bubble wrap!"
+		"color" 14054744
+		"description" $bubbles
+	)}}
+{{else}}
+	{{print "**Bubble wrap!**\n" $bubbles}}
+{{end}}

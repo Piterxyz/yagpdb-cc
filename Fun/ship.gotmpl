@@ -1,0 +1,35 @@
+{{/*
+	Created by  : Piter#8444
+	Trigger Type: Command
+	Trigger	 : ship
+
+	Usage  : -ship <1st user> [2nd user]
+	<> - required, [] - optional
+*/}}
+
+{{$2user := .User}}
+{{if $c := .CmdArgs}}
+	{{$1user := userArg (index $c 0)}}
+	{{if ge (len $c) 2}}
+		{{$2user = userArg (index $c 1)}}
+	{{end}}
+	{{if $1user}}
+		{{if $2user}}
+			{{if ne $1user.ID $2user.ID}}
+				{{$childname := print (title (lower (slice $1user.Username 0 (toInt (round (fdiv (len $1user.Username) 2)))))) (lower (slice $2user.Username 0 (toInt (round (fdiv (len $2user.Username) 2)))))}}
+				{{sendMessage nil (complexMessage "content" (print "💞 " $childname) "embed" (cembed
+					"description" (printf "%s + %s = %d%% ❤️" $1user.Username $2user.Username (randInt 1 100))
+					"color" 16405074
+				))}}
+			{{else}}
+				You can't ship yourself!
+			{{end}}
+		{{else}}
+			Couldn't find the second user.
+		{{end}}
+	{{else}}
+		Couldn't find the first user.
+	{{end}}
+{{else}}
+	Correct usage: `-ship <1st user> [2nd user]`
+{{end}}
